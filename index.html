@@ -1,941 +1,1283 @@
-from pathlib import Path
-
-html = r'''<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Happy Birthday Arham 🎂</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#05060a">
+<title>For Arham — A Birthday Story</title>
 
 <style>
+:root{--gold:#f6cf73;--cream:#fff7df;--ink:#05060a;--muted:#b8bbc4}
 *{box-sizing:border-box;margin:0;padding:0}
+html,body{width:100%;height:100%;overflow:hidden;background:var(--ink);color:white;font-family:Inter,Arial,sans-serif}
+body{position:relative}
+#app{position:fixed;inset:0;background:#05060a;overflow:hidden}
 
-html,body{
-  width:100%;
-  height:100%;
-  overflow:hidden;
-}
-
-body{
-  font-family:Arial,sans-serif;
-  background:#050711;
-  color:#fff;
-}
-
-/* Every scene is positioned on top of the previous one.
-   Only .show is visible. */
 .scene{
-  position:fixed;
-  inset:0;
-  width:100%;
-  height:100%;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  text-align:center;
-  padding:25px;
-  opacity:0;
-  visibility:hidden;
-  pointer-events:none;
-  transform:scale(1.04);
-  transition:
-    opacity 1s ease,
-    transform 1.2s ease,
-    visibility 0s linear 1s;
-  overflow:hidden;
+position:absolute;
+inset:0;
+display:grid;
+place-items:center;
+opacity:0;
+visibility:hidden;
+transform:scale(1.045);
+transition:
+opacity 1.1s cubic-bezier(.22,.61,.36,1),
+transform 1.6s cubic-bezier(.22,.61,.36,1),
+visibility 0s linear 1.1s;
+overflow:hidden
 }
 
-.scene.show{
-  opacity:1;
-  visibility:visible;
-  pointer-events:auto;
-  transform:scale(1);
-  transition:
-    opacity 1s ease,
-    transform 1.2s ease,
-    visibility 0s linear 0s;
+.scene.is-active{
+opacity:1;
+visibility:visible;
+transform:scale(1);
+z-index:2;
+transition:
+opacity 1.1s cubic-bezier(.22,.61,.36,1),
+transform 1.6s cubic-bezier(.22,.61,.36,1),
+visibility 0s
 }
 
-/* Background stars */
 .scene::before{
-  content:"";
-  position:absolute;
-  inset:0;
-  background-image:
-    radial-gradient(circle,#ffffff 1px,transparent 1.5px),
-    radial-gradient(circle,#ffd477 1px,transparent 1.5px),
-    radial-gradient(circle,#ffffff 1px,transparent 1.5px);
-  background-size:95px 95px,145px 145px,190px 190px;
-  background-position:10px 20px,60px 80px,30px 120px;
-  opacity:.35;
-  animation:starMove 25s linear infinite;
+content:"";
+position:absolute;
+inset:0;
+background:
+radial-gradient(circle at 50% 45%,rgba(246,207,115,.12),transparent 34%),
+radial-gradient(circle at 18% 20%,rgba(255,255,255,.08) 0 1px,transparent 2px),
+radial-gradient(circle at 76% 28%,rgba(246,207,115,.15) 0 1px,transparent 2px);
+background-size:auto,130px 130px,180px 180px;
+animation:stars 24s linear infinite;
+pointer-events:none
 }
 
-@keyframes starMove{
-  to{
-    background-position:220px 130px,-100px 170px,160px -120px;
-  }
+@keyframes stars{
+to{
+background-position:0 0,190px 100px,-140px 130px
+}
 }
 
-/* Golden ambient glow */
 .scene::after{
-  content:"";
-  position:absolute;
-  width:65vw;
-  height:65vw;
-  max-width:800px;
-  max-height:800px;
-  border-radius:50%;
-  background:radial-gradient(circle,#ffd47718 0%,transparent 68%);
-  filter:blur(20px);
-  animation:ambient 5s ease-in-out infinite alternate;
+content:"";
+position:absolute;
+inset:0;
+background:
+linear-gradient(
+180deg,
+rgba(0,0,0,.18),
+transparent 35%,
+rgba(0,0,0,.42)
+);
+pointer-events:none
 }
 
-@keyframes ambient{
-  from{transform:scale(.85);opacity:.5}
-  to{transform:scale(1.1);opacity:1}
+.grain{
+position:absolute;
+inset:-50%;
+opacity:.055;
+pointer-events:none;
+z-index:20;
+background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.8'/%3E%3C/svg%3E");
+animation:grain .25s steps(2) infinite
+}
+
+@keyframes grain{
+0%{transform:translate(0,0)}
+25%{transform:translate(2%,-1%)}
+50%{transform:translate(-1%,2%)}
+75%{transform:translate(1%,1%)}
+100%{transform:translate(-2%,-1%)}
 }
 
 .content{
-  position:relative;
-  z-index:5;
-  width:min(920px,100%);
+position:relative;
+z-index:5;
+width:min(1100px,92vw);
+text-align:center
 }
 
-.small{
-  font-size:13px;
-  letter-spacing:4px;
-  color:#bfc4d5;
-  text-transform:uppercase;
-  margin-bottom:18px;
+.kicker{
+font-size:11px;
+letter-spacing:.34em;
+text-transform:uppercase;
+color:#c7c9d1;
+margin-bottom:20px;
+opacity:0;
+transform:translateY(20px)
 }
 
-h1{
-  font-family:Georgia,serif;
-  font-size:clamp(50px,9vw,100px);
-  line-height:1.04;
-  margin:18px 0;
-  text-shadow:0 15px 60px #000;
+.title{
+font-family:Georgia,serif;
+font-weight:500;
+font-size:clamp(54px,9vw,116px);
+line-height:.94;
+letter-spacing:-.04em;
+opacity:0;
+transform:translateY(35px);
+text-shadow:0 20px 70px rgba(0,0,0,.65)
 }
 
-h2{
-  font-family:Georgia,serif;
-  font-size:clamp(35px,5vw,58px);
-  line-height:1.1;
-  margin-bottom:20px;
+.title em{
+font-style:normal;
+color:var(--gold);
+text-shadow:0 0 35px rgba(246,207,115,.28)
 }
 
-p{
-  color:#c8ccda;
-  font-size:18px;
-  line-height:1.7;
+.lead{
+max-width:650px;
+margin:24px auto 0;
+color:#c8cad2;
+font-size:clamp(15px,2vw,20px);
+line-height:1.7;
+opacity:0;
+transform:translateY(24px)
 }
 
-.gold{
-  color:#ffd477;
-  text-shadow:0 0 35px #ffd47766;
+.scene.is-active .kicker{
+animation:up .9s .15s forwards
 }
 
-/* Elements animate only when their scene becomes visible */
-.animate{
-  opacity:0;
-  transform:translateY(35px);
+.scene.is-active .title{
+animation:up 1.1s .35s forwards
 }
 
-.scene.show .animate{
-  animation:enter .9s cubic-bezier(.22,.61,.36,1) forwards;
+.scene.is-active .lead{
+animation:up .9s .7s forwards
 }
 
-.scene.show .d1{animation-delay:.2s}
-.scene.show .d2{animation-delay:.45s}
-.scene.show .d3{animation-delay:.7s}
-.scene.show .d4{animation-delay:.95s}
-
-@keyframes enter{
-  to{
-    opacity:1;
-    transform:translateY(0);
-  }
+@keyframes up{
+to{
+opacity:1;
+transform:translateY(0)
+}
 }
 
-.gift{
-  font-size:115px;
-  margin:25px 0;
-  filter:drop-shadow(0 20px 30px #000);
-  animation:float 2.5s ease-in-out infinite;
+.logo-mark{
+width:74px;
+height:74px;
+border:1px solid rgba(246,207,115,.5);
+border-radius:50%;
+display:grid;
+place-items:center;
+margin:0 auto 30px;
+color:var(--gold);
+font:28px Georgia,serif;
+opacity:0;
+transform:scale(.7) rotate(-20deg)
 }
 
-@keyframes float{
-  0%,100%{transform:translateY(0) rotate(-2deg)}
-  50%{transform:translateY(-16px) rotate(2deg)}
+.scene.is-active .logo-mark{
+animation:mark 1.1s .05s cubic-bezier(.22,.61,.36,1) forwards
 }
 
-.orbit{
-  position:absolute;
-  left:50%;
-  top:50%;
-  width:340px;
-  height:340px;
-  margin-left:-170px;
-  margin-top:-170px;
-  border:1px solid #ffd47725;
-  border-radius:50%;
-  animation:spin 18s linear infinite;
+@keyframes mark{
+to{
+opacity:1;
+transform:scale(1) rotate(0)
+}
 }
 
-.orbit::before,
-.orbit::after{
-  content:"✦";
-  position:absolute;
-  color:#ffd477;
-  font-size:22px;
-  text-shadow:0 0 20px #ffd477;
+.scroll-line{
+position:absolute;
+bottom:32px;
+left:50%;
+width:1px;
+height:58px;
+background:linear-gradient(var(--gold),transparent);
+transform-origin:top;
+animation:pulse 1.8s infinite;
+z-index:6
 }
 
-.orbit::before{
-  top:-12px;
-  left:50%;
+@keyframes pulse{
+50%{
+transform:scaleY(.45);
+opacity:.45
+}
 }
 
-.orbit::after{
-  right:-8px;
-  bottom:30px;
+.orb{
+width:min(34vw,340px);
+height:min(34vw,340px);
+border:1px solid rgba(246,207,115,.18);
+border-radius:50%;
+position:absolute;
+left:50%;
+top:50%;
+transform:translate(-50%,-50%);
+box-shadow:
+0 0 120px rgba(246,207,115,.08),
+inset 0 0 80px rgba(246,207,115,.04);
+animation:orb 9s linear infinite
 }
 
-@keyframes spin{
-  to{transform:rotate(360deg)}
+.orb::before,
+.orb::after{
+content:"✦";
+position:absolute;
+color:var(--gold);
+font-size:18px;
+text-shadow:0 0 18px var(--gold)
 }
 
-.photos{
-  display:grid;
-  grid-template-columns:repeat(3,1fr);
-  gap:14px;
-  margin-top:25px;
+.orb::before{
+top:-10px;
+left:50%
 }
 
-.photo{
-  height:205px;
-  overflow:hidden;
-  border-radius:20px;
-  border:1px solid #ffffff20;
-  box-shadow:0 15px 50px #000;
-  opacity:0;
-  transform:scale(.88);
+.orb::after{
+right:4%;
+bottom:15%
 }
 
-.scene.show .photo{
-  animation:photoIn .9s ease forwards;
+@keyframes orb{
+to{
+transform:translate(-50%,-50%) rotate(360deg)
+}
 }
 
-.scene.show .photo:nth-child(1){animation-delay:.15s}
-.scene.show .photo:nth-child(2){animation-delay:.3s}
-.scene.show .photo:nth-child(3){animation-delay:.45s}
-.scene.show .photo:nth-child(4){animation-delay:.6s}
-.scene.show .photo:nth-child(5){animation-delay:.75s}
-.scene.show .photo:nth-child(6){animation-delay:.9s}
-
-@keyframes photoIn{
-  to{
-    opacity:1;
-    transform:scale(1);
-  }
+.hero-word{
+font-size:clamp(20px,3vw,34px);
+letter-spacing:.22em;
+text-transform:uppercase;
+color:var(--cream);
+margin-top:24px;
+opacity:0;
+transform:scale(.92)
 }
 
-.photo img{
-  width:100%;
-  height:100%;
-  object-fit:cover;
-  display:block;
-  transition:transform 5s ease;
+.scene.is-active .hero-word{
+animation:heroWord 1.2s 1s forwards
 }
 
-.scene.show .photo img{
-  transform:scale(1.08);
+@keyframes heroWord{
+to{
+opacity:1;
+transform:scale(1)
+}
 }
 
-.messages{
-  display:grid;
-  grid-template-columns:repeat(3,1fr);
-  gap:15px;
-  margin-top:30px;
+.photo-stage{
+position:relative;
+width:min(900px,86vw);
+height:min(68vh,720px);
+margin:auto;
+perspective:1200px
 }
 
-.message{
-  min-height:170px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  padding:25px;
-  border-radius:22px;
-  border:1px solid #ffd47728;
-  background:#ffffff0d;
-  box-shadow:0 20px 60px #000;
-  line-height:1.6;
-  opacity:0;
-  transform:translateY(30px);
+.photo-card{
+position:absolute;
+left:50%;
+top:50%;
+width:min(310px,34vw);
+height:min(520px,64vh);
+border-radius:22px;
+overflow:hidden;
+border:1px solid rgba(255,255,255,.18);
+box-shadow:0 30px 80px rgba(0,0,0,.65);
+background:#111;
+opacity:0;
+transform:
+translate(-50%,-50%)
+translateX(0)
+scale(.78)
+rotateY(0deg);
+transition:all 1.2s cubic-bezier(.16,1,.3,1)
 }
 
-.scene.show .message{
-  animation:messageIn .9s ease forwards;
+.photo-card img{
+width:100%;
+height:100%;
+object-fit:cover;
+display:block;
+filter:saturate(.95);
+transform:scale(1.08);
+transition:transform 7s ease
 }
 
-.scene.show .message:nth-child(1){animation-delay:.2s}
-.scene.show .message:nth-child(2){animation-delay:.5s}
-.scene.show .message:nth-child(3){animation-delay:.8s}
-
-@keyframes messageIn{
-  to{
-    opacity:1;
-    transform:translateY(0);
-  }
+.photo-card::after{
+content:"";
+position:absolute;
+inset:0;
+background:
+linear-gradient(
+180deg,
+transparent 55%,
+rgba(0,0,0,.42)
+);
+pointer-events:none
 }
 
-.card{
-  padding:42px;
-  border-radius:30px;
-  border:1px solid #ffffff20;
-  background:#ffffff0b;
-  backdrop-filter:blur(18px);
-  box-shadow:0 30px 100px #000;
+.scene.is-active .photo-card img{
+transform:scale(1)
 }
 
-.music-note{
-  font-size:80px;
-  margin-bottom:15px;
-  animation:music 1.4s ease-in-out infinite;
+.scene.is-active .photo-card:nth-child(1){
+opacity:1;
+transform:
+translate(-50%,-50%)
+translateX(-210px)
+rotate(-8deg)
+scale(.82);
+transition-delay:.15s;
+z-index:1
 }
 
-@keyframes music{
-  0%,100%{transform:translateY(0) rotate(-5deg)}
-  50%{transform:translateY(-12px) rotate(5deg)}
+.scene.is-active .photo-card:nth-child(2){
+opacity:1;
+transform:
+translate(-50%,-50%)
+translateX(-115px)
+rotate(-4deg)
+scale(.9);
+transition-delay:.25s;
+z-index:2
+}
+
+.scene.is-active .photo-card:nth-child(3){
+opacity:1;
+transform:
+translate(-50%,-50%)
+translateX(0)
+rotate(0deg)
+scale(1);
+transition-delay:.35s;
+z-index:5
+}
+
+.scene.is-active .photo-card:nth-child(4){
+opacity:1;
+transform:
+translate(-50%,-50%)
+translateX(115px)
+rotate(4deg)
+scale(.9);
+transition-delay:.45s;
+z-index:2
+}
+
+.scene.is-active .photo-card:nth-child(5){
+opacity:1;
+transform:
+translate(-50%,-50%)
+translateX(210px)
+rotate(8deg)
+scale(.82);
+transition-delay:.55s;
+z-index:1
+}
+
+.photo-caption{
+position:absolute;
+left:50%;
+bottom:-6px;
+transform:translateX(-50%);
+z-index:8;
+white-space:nowrap;
+font:italic 18px Georgia,serif;
+color:#eee;
+opacity:0
+}
+
+.scene.is-active .photo-caption{
+animation:caption 1s 1.2s forwards
+}
+
+@keyframes caption{
+to{
+opacity:1;
+transform:
+translateX(-50%)
+translateY(-8px)
+}
+}
+
+.video-scene{
+background:#000
+}
+
+.video-wrap{
+position:absolute;
+inset:0;
+display:grid;
+place-items:center;
+overflow:hidden;
+background:#000
+}
+
+.video-wrap video{
+width:100%;
+height:100%;
+object-fit:cover;
+filter:
+brightness(.65)
+saturate(.9);
+transform:scale(1.06);
+transition:transform 12s ease
+}
+
+.scene.is-active .video-wrap video{
+transform:scale(1)
+}
+
+.video-vignette{
+position:absolute;
+inset:0;
+background:
+radial-gradient(
+circle at center,
+transparent 20%,
+rgba(0,0,0,.75) 100%
+),
+linear-gradient(
+180deg,
+rgba(0,0,0,.25),
+transparent 35%,
+rgba(0,0,0,.6)
+);
+z-index:2
+}
+
+.video-copy{
+position:relative;
+z-index:4;
+text-align:center
+}
+
+.video-copy .title{
+font-size:clamp(44px,7vw,90px)
+}
+
+.video-badge{
+display:inline-block;
+border:1px solid rgba(255,255,255,.3);
+padding:9px 15px;
+border-radius:999px;
+font-size:10px;
+letter-spacing:.25em;
+text-transform:uppercase;
+color:#ddd;
+opacity:0;
+transform:translateY(15px)
+}
+
+.scene.is-active .video-badge{
+animation:up .8s .35s forwards
+}
+
+.message-card{
+width:min(760px,90vw);
+padding:50px 42px;
+border:1px solid rgba(246,207,115,.18);
+background:rgba(255,255,255,.045);
+backdrop-filter:blur(18px);
+border-radius:28px;
+box-shadow:0 30px 100px rgba(0,0,0,.55);
+opacity:0;
+transform:translateY(30px) scale(.97)
+}
+
+.scene.is-active .message-card{
+animation:cardIn 1.1s .2s forwards
+}
+
+@keyframes cardIn{
+to{
+opacity:1;
+transform:translateY(0) scale(1)
+}
+}
+
+.message-card .quote{
+font:clamp(23px,3vw,34px)/1.55 Georgia,serif;
+color:#f5f3ed
+}
+
+.message-card .from{
+margin-top:28px;
+color:var(--gold);
+font-size:12px;
+letter-spacing:.28em;
+text-transform:uppercase
 }
 
 .cake{
-  font-size:145px;
-  margin:20px 0;
-  filter:drop-shadow(0 20px 35px #000);
-  animation:cake 2s ease-in-out infinite;
+font-size:clamp(90px,13vw,160px);
+filter:drop-shadow(0 20px 40px rgba(0,0,0,.7));
+opacity:0;
+transform:translateY(35px) scale(.8)
 }
 
-@keyframes cake{
-  0%,100%{transform:translateY(0) scale(1)}
-  50%{transform:translateY(-14px) scale(1.04)}
+.scene.is-active .cake{
+animation:
+cakeIn 1s .35s forwards,
+float 2.4s 1.35s ease-in-out infinite
 }
 
-.wish{
-  margin-top:20px;
-  font-family:Georgia,serif;
-  font-size:clamp(25px,4vw,43px);
-  color:#fff;
-  opacity:0;
+@keyframes cakeIn{
+to{
+opacity:1;
+transform:translateY(0) scale(1)
+}
 }
 
-.scene.show .wish{
-  animation:wishIn 1.2s 1s forwards;
+@keyframes float{
+0%,100%{
+transform:translateY(0)
+}
+50%{
+transform:translateY(-16px)
+}
 }
 
-@keyframes wishIn{
-  to{opacity:1}
+.wish-text{
+font:clamp(26px,4vw,48px) Georgia,serif;
+margin-top:18px;
+color:#fff;
+opacity:0
 }
 
-.heart{
-  font-size:65px;
-  margin-bottom:15px;
-  animation:heart 1.2s ease-in-out infinite;
+.scene.is-active .wish-text{
+animation:up 1s 1.05s forwards
 }
 
-@keyframes heart{
-  50%{transform:scale(1.18)}
+.final-ring{
+width:230px;
+height:230px;
+border-radius:50%;
+border:1px solid rgba(246,207,115,.25);
+margin:0 auto 35px;
+display:grid;
+place-items:center;
+position:relative;
+opacity:0;
+transform:scale(.6)
 }
 
-.progress{
-  position:fixed;
-  left:0;
-  bottom:0;
-  height:3px;
-  width:0;
-  background:#ffd477;
-  box-shadow:0 0 15px #ffd477;
-  z-index:1000;
+.final-ring::before{
+content:"";
+position:absolute;
+inset:15px;
+border:1px solid rgba(246,207,115,.13);
+border-radius:50%;
+animation:spin 12s linear infinite
 }
 
-.music-status{
-  position:fixed;
-  right:16px;
-  bottom:14px;
-  z-index:1001;
-  color:#aeb4c7;
-  font-size:12px;
-  opacity:.75;
+.final-ring span{
+font:50px Georgia,serif;
+color:var(--gold)
+}
+
+.scene.is-active .final-ring{
+animation:mark 1.1s .15s forwards
+}
+
+.final-small{
+margin-top:25px;
+color:#8f939e;
+font-size:12px;
+letter-spacing:.25em;
+text-transform:uppercase;
+opacity:0
+}
+
+.scene.is-active .final-small{
+animation:up .8s 1.1s forwards
+}
+
+@keyframes spin{
+to{
+transform:rotate(360deg)
+}
+}
+
+#progress{
+position:fixed;
+z-index:100;
+left:0;
+bottom:0;
+height:2px;
+width:0;
+background:var(--gold);
+box-shadow:0 0 16px rgba(246,207,115,.7)
+}
+
+#effects{
+position:fixed;
+inset:0;
+z-index:50;
+pointer-events:none;
+overflow:hidden
+}
+
+.particle{
+position:absolute;
+width:4px;
+height:4px;
+border-radius:50%;
+background:var(--gold);
+box-shadow:0 0 14px var(--gold);
+animation:particle 2.8s ease-out forwards
+}
+
+@keyframes particle{
+to{
+transform:
+translate(var(--x),var(--y))
+scale(.1);
+opacity:0
+}
 }
 
 .confetti{
-  position:fixed;
-  top:-25px;
-  width:9px;
-  height:17px;
-  z-index:2000;
-  pointer-events:none;
-  animation:fall 4s linear forwards;
+position:absolute;
+top:-20px;
+width:8px;
+height:14px;
+animation:confetti 4s linear forwards
 }
 
-@keyframes fall{
-  to{
-    transform:translateY(115vh) rotate(900deg);
-    opacity:0;
-  }
+@keyframes confetti{
+to{
+transform:
+translateY(115vh)
+rotate(900deg);
+opacity:0
+}
 }
 
-.spark{
-  position:fixed;
-  width:5px;
-  height:5px;
-  border-radius:50%;
-  background:#ffd477;
-  box-shadow:0 0 18px #ffd477;
-  z-index:2000;
-  pointer-events:none;
-  animation:spark 2.4s ease-out forwards;
+.flash{
+position:fixed;
+inset:0;
+background:#fff;
+z-index:90;
+opacity:0;
+pointer-events:none
 }
 
-@keyframes spark{
-  from{
-    transform:translate(0,0) scale(1);
-    opacity:1;
-  }
-  to{
-    transform:translate(var(--x),var(--y)) scale(.1);
-    opacity:0;
-  }
+.flash.on{
+animation:flash .8s ease
+}
+
+@keyframes flash{
+0%{opacity:0}
+20%{opacity:.22}
+100%{opacity:0}
 }
 
 @media(max-width:700px){
-  .photos,.messages{
-    grid-template-columns:1fr 1fr;
-  }
 
-  .photo{
-    height:150px;
-  }
-
-  .card{
-    padding:28px 20px;
-  }
-
-  p{
-    font-size:16px;
-  }
-
-  .orbit{
-    width:260px;
-    height:260px;
-    margin-left:-130px;
-    margin-top:-130px;
-  }
+.photo-stage{
+height:65vh
 }
 
-@media(max-width:480px){
-  .photos,.messages{
-    grid-template-columns:1fr;
-  }
+.photo-card{
+width:42vw;
+height:58vh
+}
 
-  .photo{
-    height:175px;
-  }
+.scene.is-active .photo-card:nth-child(1){
+transform:
+translate(-50%,-50%)
+translateX(-90px)
+rotate(-7deg)
+scale(.78)
+}
 
-  .gift{
-    font-size:90px;
-  }
+.scene.is-active .photo-card:nth-child(2){
+transform:
+translate(-50%,-50%)
+translateX(-48px)
+rotate(-3deg)
+scale(.88)
+}
 
-  .cake{
-    font-size:115px;
-  }
+.scene.is-active .photo-card:nth-child(3){
+transform:
+translate(-50%,-50%)
+rotate(0)
+scale(.96)
+}
 
-  .message{
-    min-height:120px;
-  }
+.scene.is-active .photo-card:nth-child(4){
+transform:
+translate(-50%,-50%)
+translateX(48px)
+rotate(3deg)
+scale(.88)
+}
+
+.scene.is-active .photo-card:nth-child(5){
+transform:
+translate(-50%,-50%)
+translateX(90px)
+rotate(7deg)
+scale(.78)
+}
+
+.message-card{
+padding:35px 25px
+}
+
+.lead{
+font-size:15px
+}
+
 }
 </style>
 </head>
 
 <body>
 
-<!-- 1 -->
-<section class="scene show" id="scene1" data-time="5500">
-  <div class="content">
-    <p class="small animate">A Little Surprise For You</p>
+<div id="app">
 
-    <h1 class="animate d1">
-      Hey <span class="gold">Arham</span> 👋
-    </h1>
+<div class="grain"></div>
 
-    <p class="animate d2">
-      Someone has prepared a little birthday surprise especially for you...
-    </p>
 
-    <div class="gift animate d3">🎁</div>
+<!-- SCENE 1 -->
 
-    <p class="small animate d4">Get Ready ✨</p>
-  </div>
+<section class="scene is-active" data-duration="6000">
+
+<div class="orb"></div>
+
+<div class="content">
+
+<div class="logo-mark">
+A
+</div>
+
+<div class="kicker">
+A little story made for one person
+</div>
+
+<h1 class="title">
+This one is<br>
+<em>for Arham.</em>
+</h1>
+
+<p class="lead">
+Some birthdays deserve more than a message.
+</p>
+
+</div>
+
+<div class="scroll-line"></div>
+
 </section>
 
 
-<!-- 2 -->
-<section class="scene" id="scene2" data-time="4500">
-  <div class="orbit"></div>
+<!-- SCENE 2 -->
 
-  <div class="content">
-    <p class="small animate">The Surprise Begins</p>
+<section class="scene" data-duration="5200">
 
-    <h1 class="animate d1">
-      <span class="gold">Something Special</span><br>
-      Is Waiting For You
-    </h1>
+<div class="content">
 
-    <p class="animate d2">
-      A little journey made just for your birthday.
-    </p>
-  </div>
+<div class="kicker">
+A day worth remembering
+</div>
+
+<h1 class="title">
+Happy Birthday<br>
+<em>Arham</em> 🎂
+</h1>
+
+<p class="lead">
+Today is about the memories, the laughs,
+and the people who make them better.
+</p>
+
+<div class="hero-word">
+09 · 10 · 2026
+</div>
+
+</div>
+
 </section>
 
 
-<!-- 3 -->
-<section class="scene" id="scene3" data-time="5000">
-  <div class="content">
-    <p class="small animate">Surprise Unlocked ✓</p>
+<!-- SCENE 3 : ARHAM PHOTOS -->
 
-    <h1 class="animate d1">
-      Happy Birthday<br>
-      <span class="gold">Arham 🎂</span>
-    </h1>
+<section class="scene" data-duration="11500">
 
-    <p class="animate d2">
-      Today is all about you.<br>
-      Let's begin your little birthday journey.
-    </p>
-  </div>
+<div class="content">
+
+<div class="kicker">
+A few frames of Arham
+</div>
+
+<div class="photo-stage">
+
+<figure class="photo-card">
+<img
+src="assets/arham-01.jpeg"
+alt="Arham">
+</figure>
+
+<figure class="photo-card">
+<img
+src="assets/arham-02.jpeg"
+alt="Arham">
+</figure>
+
+<figure class="photo-card">
+<img
+src="assets/arham-03.jpeg"
+alt="Arham">
+</figure>
+
+<figure class="photo-card">
+<img
+src="assets/arham-04.jpeg"
+alt="Arham">
+</figure>
+
+<figure class="photo-card">
+<img
+src="assets/arham-05.jpeg"
+alt="Arham">
+</figure>
+
+<div class="photo-caption">
+different moments. same Arham.
+</div>
+
+</div>
+
+</div>
+
 </section>
 
 
-<!-- 4 -->
-<section class="scene" id="scene4" data-time="7500">
-  <div class="content">
-    <h2 class="animate">Our Memories 📸</h2>
+<!-- SCENE 4 : THREE FRIENDS VIDEO -->
 
-    <p class="small animate d1">
-      Placeholder Photos — We Will Replace These Later
-    </p>
+<section
+class="scene video-scene"
+data-video-scene
+data-duration="18000">
 
-    <div class="photos">
+<div class="video-wrap">
 
-      <div class="photo">
-        <img src="https://images.unsplash.com/photo-1511632765486-a01980e01a18?auto=format&fit=crop&w=800&q=80" alt="Birthday memory">
-      </div>
+<video
+id="friendsVideo"
+src="assets/friends-video.mp4"
+muted
+playsinline
+preload="auto">
+</video>
 
-      <div class="photo">
-        <img src="https://images.unsplash.com/photo-1529156069898-49953e39b3ac?auto=format&fit=crop&w=800&q=80" alt="Birthday memory">
-      </div>
+<div class="video-vignette"></div>
 
-      <div class="photo">
-        <img src="https://images.unsplash.com/photo-1506869640319-fe1a24fd76dc?auto=format&fit=crop&w=800&q=80" alt="Birthday memory">
-      </div>
+</div>
 
-      <div class="photo">
-        <img src="https://images.unsplash.com/photo-1517457373958-b7bdd4587205?auto=format&fit=crop&w=800&q=80" alt="Birthday memory">
-      </div>
+<div class="video-copy">
 
-      <div class="photo">
-        <img src="https://images.unsplash.com/photo-1527529482837-4698179dc6ce?auto=format&fit=crop&w=800&q=80" alt="Birthday memory">
-      </div>
+<div class="video-badge">
+three friends · one story
+</div>
 
-      <div class="photo">
-        <img src="https://images.unsplash.com/photo-1469571486292-0ba58a3f068b?auto=format&fit=crop&w=800&q=80" alt="Birthday memory">
-      </div>
+<h1 class="title">
+The moments<br>
+<em>we keep.</em>
+</h1>
 
-    </div>
-  </div>
+</div>
+
 </section>
 
 
-<!-- 5 -->
-<section class="scene" id="scene5" data-time="6500">
-  <div class="content">
-    <h2 class="animate">Birthday Messages 💌</h2>
+<!-- SCENE 5 -->
 
-    <p class="small animate d1">
-      A Few Words For You
-    </p>
+<section class="scene" data-duration="7000">
 
-    <div class="messages">
+<div class="content">
 
-      <div class="message">
-        Your positive energy makes every moment better. ✨
-      </div>
+<div class="message-card">
 
-      <div class="message">
-        Keep chasing your dreams and keep being yourself. ❤️
-      </div>
+<div class="kicker">
+For the birthday boy
+</div>
 
-      <div class="message">
-        Here's to more adventures and unforgettable memories. 🥂
-      </div>
+<div class="quote">
+“Here’s to more late nights,
+more random plans,
+more laughs —
+and a lot more memories together.”
+</div>
 
-    </div>
-  </div>
+<div class="from">
+From your friends ❤️
+</div>
+
+</div>
+
+</div>
+
 </section>
 
 
-<!-- 6 -->
-<section class="scene" id="scene6" data-time="5500">
-  <div class="content">
-    <div class="card animate">
+<!-- SCENE 6 -->
 
-      <div class="music-note">🎵</div>
+<section class="scene" data-duration="7500">
 
-      <h2>A Little Birthday Music</h2>
+<div class="content">
 
-      <p>
-        Happy Birthday music will be added here
-        in the final version.
-      </p>
+<div class="kicker">
+One more thing...
+</div>
 
-      <p class="small" style="margin-top:18px">
-        Music moment... ✨
-      </p>
+<div class="cake">
+🎂
+</div>
 
-    </div>
-  </div>
+<div class="wish-text">
+Make a wish.
+The best chapters are still ahead. ✨
+</div>
+
+</div>
+
 </section>
 
 
-<!-- 7 -->
-<section class="scene" id="scene7" data-time="6000">
-  <div class="content">
+<!-- SCENE 7 : FINAL -->
 
-    <p class="small animate">Make A Wish</p>
+<section class="scene" data-duration="10000">
 
-    <h2 class="animate d1">
-      Your Special Moment ✨
-    </h2>
+<div class="content">
 
-    <div class="cake animate d2">🎂</div>
+<div class="final-ring">
+<span>✦</span>
+</div>
 
-    <p class="wish">
-      Close your eyes... and make a wish. 💫
-    </p>
+<div class="kicker">
+Happy Birthday, Arham
+</div>
 
-  </div>
+<h1 class="title">
+Keep<br>
+<em>shining.</em>
+</h1>
+
+<p class="lead">
+More memories.
+More adventures.
+More reasons to celebrate.
+</p>
+
+<div class="final-small">
+Made with friendship · 09 October 2026
+</div>
+
+</div>
+
 </section>
 
 
-<!-- 8 -->
-<section class="scene" id="scene8" data-time="7000">
-  <div class="content">
+<div id="progress"></div>
 
-    <div class="card animate">
+<div id="effects"></div>
 
-      <div class="heart">💛</div>
+<div class="flash" id="flash"></div>
 
-      <h2>A Special Message</h2>
-
-      <p>
-        Dear Arham,
-        <br><br>
-
-        On your special day, I just want to wish you
-        happiness, success and countless unforgettable
-        moments.
-
-        <br><br>
-
-        Keep being the amazing person you are.
-
-        <br><br>
-
-        <span class="gold">
-          Happy Birthday, Arham! 🎉
-        </span>
-
-        <br><br>
-
-        — Your Friend
-      </p>
-
-    </div>
-
-  </div>
-</section>
-
-
-<!-- 9 -->
-<section class="scene" id="scene9" data-time="9000">
-  <div class="content">
-
-    <p class="small animate">
-      The End... For Now
-    </p>
-
-    <h1 class="animate d1">
-      Keep <span class="gold">Shining</span>,<br>
-      Arham ✨
-    </h1>
-
-    <p class="animate d2">
-      More memories.<br>
-      More adventures.<br>
-      More reasons to celebrate.
-    </p>
-
-    <div class="animate d3"
-         style="font-size:70px;margin-top:28px">
-      🎈 🎉 🎈
-    </div>
-
-    <p class="small animate d4"
-       style="margin-top:30px">
-      Happy Birthday ❤️
-    </p>
-
-  </div>
-</section>
-
-
-<div class="progress" id="progress"></div>
-
-<div class="music-status">
-  🎵 Birthday experience
 </div>
 
 
 <script>
-"use strict";
 
-/*
-  Automatic birthday experience.
-  No buttons are required.
+(() => {
 
-  Scene timings are controlled by data-time above.
-*/
-
-const scenes = Array.from(
-  document.querySelectorAll(".scene")
-);
+const scenes =
+[
+...document.querySelectorAll('.scene')
+];
 
 const progress =
-  document.getElementById("progress");
+document.getElementById('progress');
 
-let currentScene = 0;
-let sceneTimer = null;
-let progressTimer = null;
+const effects =
+document.getElementById('effects');
 
+const flash =
+document.getElementById('flash');
 
-/* Show exactly one scene */
-function showScene(index){
+const video =
+document.getElementById('friendsVideo');
 
-  if(index >= scenes.length){
-    index = 0;
-  }
+let index = 0;
 
-  if(index < 0){
-    index = 0;
-  }
-
-  currentScene = index;
-
-  scenes.forEach((scene,i)=>{
-
-    if(i === index){
-      scene.classList.add("show");
-    }else{
-      scene.classList.remove("show");
-    }
-
-  });
+let timer = null;
 
 
-  const duration =
-    Number(scenes[index].dataset.time) || 5000;
+/* Progress bar */
 
+function progressBar(ms){
 
-  startProgress(duration);
+progress.style.transition =
+'none';
 
+progress.style.width =
+'0%';
 
-  /* Wish particles */
-  if(index === 6){
-    setTimeout(createWishSparks,700);
-  }
+void progress.offsetWidth;
 
+progress.style.transition =
+`width ${ms}ms linear`;
 
-  /* Confetti */
-  if(index === 7){
-    setTimeout(createConfetti,1300);
-  }
-
-
-  clearTimeout(sceneTimer);
-
-  sceneTimer = setTimeout(()=>{
-
-    showScene(index + 1);
-
-  },duration);
-
-}
-
-
-/* Bottom progress bar */
-function startProgress(duration){
-
-  clearTimeout(progressTimer);
-
-  progress.style.transition = "none";
-  progress.style.width = "0%";
-
-  /* Force browser to apply zero width first */
-  void progress.offsetWidth;
-
-  progress.style.transition =
-    "width " + duration + "ms linear";
-
-  progress.style.width = "100%";
+progress.style.width =
+'100%';
 
 }
 
 
 /* Golden particles */
-function createWishSparks(){
 
-  const old =
-    document.querySelectorAll(".spark");
+function particles(count=24){
 
-  old.forEach(x=>x.remove());
+for(let i=0;i<count;i++){
 
+const p =
+document.createElement('i');
 
-  for(let i=0;i<30;i++){
+p.className =
+'particle';
 
-    const spark =
-      document.createElement("div");
+p.style.left =
+'50%';
 
-    spark.className = "spark";
+p.style.top =
+'48%';
 
-    spark.style.left =
-      "50%";
-
-    spark.style.top =
-      "45%";
-
-    spark.style.setProperty(
-      "--x",
-      (Math.random()*420-210)+"px"
-    );
-
-    spark.style.setProperty(
-      "--y",
-      (Math.random()*330-165)+"px"
-    );
-
-    spark.style.animationDelay =
-      (Math.random()*.8)+"s";
-
-    document.body.appendChild(spark);
-
-    setTimeout(()=>{
-      spark.remove();
-    },3000);
-
-  }
-
-}
-
-
-/* Birthday confetti */
-function createConfetti(){
-
-  const colors = [
-    "#ffd477",
-    "#ffffff",
-    "#ff7ba5",
-    "#72c9ff"
-  ];
-
-
-  for(let i=0;i<120;i++){
-
-    const piece =
-      document.createElement("div");
-
-    piece.className =
-      "confetti";
-
-    piece.style.left =
-      Math.random()*100 + "%";
-
-    piece.style.background =
-      colors[
-        Math.floor(
-          Math.random()*colors.length
-        )
-      ];
-
-    piece.style.animationDelay =
-      Math.random()*1.2 + "s";
-
-    piece.style.transform =
-      "rotate("+
-      Math.random()*360+
-      "deg)";
-
-    document.body.appendChild(piece);
-
-    setTimeout(()=>{
-      piece.remove();
-    },5000);
-
-  }
-
-}
-
-
-/*
-  IMPORTANT:
-  Browsers normally block audible
-  autoplay until the visitor interacts.
-
-  We do NOT create fake buttons.
-  The visual experience continues automatically.
-*/
-
-
-/* Start automatically after page loads */
-window.addEventListener("load",()=>{
-
-  /* Make sure scene 1 is visible immediately */
-  showScene(0);
-
-});
-
-
-/*
-  If visitor clicks/touches anywhere,
-  this gives us a chance to add real audio later.
-*/
-document.addEventListener(
-  "pointerdown",
-  ()=>{
-    document.body.dataset.interacted = "true";
-  },
-  {passive:true}
+p.style.setProperty(
+'--x',
+`${Math.random()*600-300}px`
 );
+
+p.style.setProperty(
+'--y',
+`${Math.random()*420-210}px`
+);
+
+p.style.animationDelay =
+`${Math.random()*.7}s`;
+
+effects.appendChild(p);
+
+setTimeout(
+()=>p.remove(),
+3300
+);
+
+}
+
+}
+
+
+/* Confetti */
+
+function confetti(){
+
+const colors =
+[
+'#f6cf73',
+'#fff',
+'#dba9ff',
+'#8ed8ff',
+'#ff9fb7'
+];
+
+for(let i=0;i<90;i++){
+
+const c =
+document.createElement('i');
+
+c.className =
+'confetti';
+
+c.style.left =
+`${Math.random()*100}%`;
+
+c.style.background =
+colors[
+Math.floor(
+Math.random()*colors.length
+)
+];
+
+c.style.animationDelay =
+`${Math.random()*1.1}s`;
+
+c.style.transform =
+`rotate(${Math.random()*360}deg)`;
+
+effects.appendChild(c);
+
+setTimeout(
+()=>c.remove(),
+5200
+);
+
+}
+
+}
+
+
+/* Scene transition */
+
+function transition(indexTo){
+
+scenes.forEach(
+(s,i)=>
+s.classList.toggle(
+'is-active',
+i===indexTo
+)
+);
+
+index =
+indexTo;
+
+const ms =
+Number(
+scenes[index].dataset.duration
+) || 6000;
+
+progressBar(ms);
+
+
+/* Photo intro */
+
+if(index===1){
+
+particles(30);
+
+}
+
+
+/* Video */
+
+if(index===3){
+
+video.currentTime =
+0;
+
+const play =
+video.play();
+
+if(
+play &&
+play.catch
+){
+
+play.catch(
+()=>{}
+);
+
+}
+
+}else{
+
+video.pause();
+
+}
+
+
+/* Message */
+
+if(index===5){
+
+particles(38);
+
+}
+
+
+/* Wish */
+
+if(index===6){
+
+particles(45);
+
+}
+
+
+/* Final */
+
+if(index===7){
+
+flash.classList.remove(
+'on'
+);
+
+void flash.offsetWidth;
+
+flash.classList.add(
+'on'
+);
+
+setTimeout(
+confetti,
+650
+);
+
+}
+
+
+clearTimeout(timer);
+
+timer =
+setTimeout(
+()=>
+transition(
+(index+1)%scenes.length
+),
+ms
+);
+
+}
+
+
+/* Video duration */
+
+video.addEventListener(
+'loadedmetadata',
+()=>{
+
+const scene =
+scenes[3];
+
+const ms =
+Math.max(
+18000,
+Math.ceil(
+video.duration*1000
+)+1800
+);
+
+scene.dataset.duration =
+String(ms);
+
+}
+);
+
+
+/* Start */
+
+window.addEventListener(
+'load',
+()=>{
+
+setTimeout(
+()=>transition(0),
+120
+);
+
+}
+
+);
+
+})();
 
 </script>
 
 </body>
 </html>
-'''
-
-path = Path("/mnt/data/arham-birthday-fixed/index.html")
-path.parent.mkdir(parents=True, exist_ok=True)
-path.write_text(html, encoding="utf-8")
-
-print(f"Created corrected file: {path}")
-print("The visibility logic has been simplified: scene 1 is visible immediately and JavaScript switches one scene at a time.")
