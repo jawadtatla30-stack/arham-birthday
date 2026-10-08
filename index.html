@@ -85,6 +85,139 @@ body{
 }
 
 
+
+/* PREMIUM SCENE WORLDS — each page has its own visual identity */
+.scene{isolation:isolate}
+.scene-bg{position:absolute;inset:0;overflow:hidden;z-index:-2;pointer-events:none}
+.scene-bg:before,.scene-bg:after,.scene-bg i,.scene-bg b,.scene-bg span{
+  content:"";position:absolute;display:block;pointer-events:none
+}
+.scene-bg:before{inset:0}
+.scene-bg:after{inset:0}
+
+/* 01 — midnight luxury / 3D golden cube stage */
+.bg-intro{background:
+  radial-gradient(ellipse at 50% 72%,rgba(255,197,72,.16),transparent 24%),
+  radial-gradient(ellipse at 20% 10%,rgba(76,91,180,.16),transparent 34%),
+  linear-gradient(145deg,#02030a 0%,#0b0d1a 48%,#03040a 100%)}
+.bg-intro:before{
+  background:linear-gradient(115deg,transparent 0 42%,rgba(255,255,255,.045) 47%,transparent 52%);
+  transform:translateX(-100%);animation:beam 6s ease-in-out infinite
+}
+.bg-intro:after{
+  width:700px;height:700px;left:50%;top:52%;transform:translate(-50%,-50%);
+  border:1px solid rgba(246,210,122,.12);border-radius:50%;
+  box-shadow:0 0 100px rgba(246,210,122,.06),inset 0 0 100px rgba(246,210,122,.03);
+  animation:spinSlow 18s linear infinite
+}
+.bg-intro i{width:420px;height:140px;left:50%;top:67%;transform:translateX(-50%);
+  background:rgba(246,210,122,.12);filter:blur(42px);border-radius:50%}
+.bg-intro b{width:180px;height:180px;left:8%;top:15%;border:1px solid rgba(255,255,255,.08);transform:rotate(45deg);animation:float 7s ease-in-out infinite}
+.bg-intro span{width:240px;height:240px;right:-80px;bottom:-80px;border:1px solid rgba(246,210,122,.12);border-radius:50%}
+
+/* 02 — royal gold spotlight / radial stage */
+.bg-reveal{background:
+  radial-gradient(circle at 50% 42%,#2b210f 0%,#100d09 25%,#050507 62%,#010105 100%)}
+.bg-reveal:before{
+  width:55vw;height:90vh;left:50%;top:-10vh;transform:translateX(-50%);
+  background:linear-gradient(180deg,rgba(255,232,158,.18),rgba(246,210,122,.02) 55%,transparent);
+  clip-path:polygon(38% 0,62% 0,100% 100%,0 100%);filter:blur(5px)
+}
+.bg-reveal:after{
+  width:65vmin;height:65vmin;left:50%;top:48%;transform:translate(-50%,-50%);
+  border:1px solid rgba(246,210,122,.3);border-radius:50%;
+  box-shadow:0 0 80px rgba(246,210,122,.12),0 0 0 35px rgba(246,210,122,.025),0 0 0 70px rgba(246,210,122,.018);
+  animation:pulseRing 4s ease-in-out infinite
+}
+.bg-reveal i{width:14px;height:14px;left:22%;top:24%;border-radius:50%;background:#fff3bb;box-shadow:0 0 30px 10px rgba(246,210,122,.5);animation:float 5s infinite}
+.bg-reveal b{width:8px;height:8px;right:19%;top:62%;border-radius:50%;background:#fff;box-shadow:0 0 25px 8px rgba(255,255,255,.25)}
+.bg-reveal span{width:500px;height:500px;left:50%;top:48%;transform:translate(-50%,-50%) rotate(45deg);border:1px solid rgba(255,255,255,.035);animation:spinSlow 25s linear infinite}
+
+/* 03 — photographic gallery: warm champagne studio */
+.bg-gallery-a{background:
+  radial-gradient(circle at 18% 20%,rgba(239,185,107,.18),transparent 26%),
+  radial-gradient(circle at 82% 80%,rgba(129,91,48,.17),transparent 30%),
+  linear-gradient(135deg,#100d0b,#24170e 48%,#080707)}
+.bg-gallery-a:before{
+  inset:-20%;background:repeating-linear-gradient(115deg,transparent 0 90px,rgba(255,255,255,.025) 91px 92px);
+  transform:rotate(-8deg)
+}
+.bg-gallery-a:after{
+  width:90vw;height:90vw;left:50%;top:50%;transform:translate(-50%,-50%);
+  border:1px solid rgba(246,210,122,.1);border-radius:50%;
+  box-shadow:0 0 150px rgba(246,210,122,.06)}
+.bg-gallery-a i{width:350px;height:350px;left:-100px;top:20%;border-radius:50%;background:rgba(246,190,110,.08);filter:blur(40px)}
+.bg-gallery-a b{width:250px;height:250px;right:-80px;bottom:5%;border-radius:50%;background:rgba(255,255,255,.05);filter:blur(50px)}
+.bg-gallery-a span{inset:10%;border:1px solid rgba(255,255,255,.05);transform:skewX(-8deg) rotate(2deg)}
+
+/* 04 — cool neon memory room */
+.bg-gallery-b{background:
+  radial-gradient(circle at 50% 55%,rgba(74,91,180,.22),transparent 30%),
+  radial-gradient(circle at 10% 90%,rgba(41,165,190,.13),transparent 28%),
+  linear-gradient(135deg,#030713,#091127 52%,#02040b)}
+.bg-gallery-b:before{
+  inset:-10%;
+  background:linear-gradient(90deg,transparent 10%,rgba(74,146,255,.07) 50%,transparent 90%);
+  transform:rotate(-14deg);filter:blur(20px)
+}
+.bg-gallery-b:after{
+  width:700px;height:700px;left:50%;top:52%;transform:translate(-50%,-50%) rotate(45deg);
+  border:1px solid rgba(112,164,255,.13);box-shadow:0 0 100px rgba(65,100,255,.09)}
+.bg-gallery-b i{width:12px;height:12px;left:12%;top:30%;border-radius:50%;background:#8fdcff;box-shadow:0 0 30px #4ec8ff;animation:float 6s infinite}
+.bg-gallery-b b{width:8px;height:8px;right:13%;top:22%;border-radius:50%;background:#c3b5ff;box-shadow:0 0 30px #8a7cff}
+.bg-gallery-b span{width:80vw;height:1px;left:10%;top:75%;background:linear-gradient(90deg,transparent,rgba(96,180,255,.3),transparent);transform:rotate(-8deg)}
+
+/* 05 — luxury glass room */
+.bg-message{background:
+  radial-gradient(circle at 50% 50%,rgba(255,255,255,.07),transparent 22%),
+  radial-gradient(circle at 20% 80%,rgba(246,210,122,.1),transparent 30%),
+  linear-gradient(125deg,#090a0e,#17191e 50%,#050608)}
+.bg-message:before{
+  width:80vw;height:80vw;left:50%;top:50%;transform:translate(-50%,-50%);
+  border:1px solid rgba(255,255,255,.07);border-radius:50%;
+  box-shadow:inset 0 0 100px rgba(255,255,255,.025)}
+.bg-message:after{
+  inset:7%;border:1px solid rgba(246,210,122,.08);
+  clip-path:polygon(0 12%,12% 0,88% 0,100% 12%,100% 88%,88% 100%,12% 100%,0 88%)}
+.bg-message i{width:450px;height:120px;left:50%;top:75%;transform:translateX(-50%);background:rgba(246,210,122,.1);filter:blur(50px)}
+.bg-message b{width:1px;height:70%;left:12%;top:15%;background:linear-gradient(transparent,rgba(255,255,255,.12),transparent)}
+.bg-message span{width:1px;height:70%;right:12%;top:15%;background:linear-gradient(transparent,rgba(255,255,255,.12),transparent)}
+
+/* 06 — grand celebration */
+.bg-final{background:
+  radial-gradient(circle at 50% 45%,rgba(246,210,122,.2),transparent 17%),
+  radial-gradient(circle at 50% 50%,rgba(122,75,20,.18),transparent 42%),
+  linear-gradient(135deg,#06030a,#140d08 50%,#020207)}
+.bg-final:before{
+  width:90vmin;height:90vmin;left:50%;top:45%;transform:translate(-50%,-50%);
+  border:1px solid rgba(246,210,122,.28);border-radius:50%;
+  box-shadow:0 0 0 20px rgba(246,210,122,.025),0 0 0 80px rgba(246,210,122,.015),0 0 100px rgba(246,210,122,.14);
+  animation:finalOrbit 12s linear infinite}
+.bg-final:after{
+  inset:0;background:
+  radial-gradient(circle at 15% 25%,#fff 0 1px,transparent 2px),
+  radial-gradient(circle at 82% 18%,#fff 0 1px,transparent 2px),
+  radial-gradient(circle at 72% 78%,#fff 0 1px,transparent 2px),
+  radial-gradient(circle at 22% 76%,#fff 0 1px,transparent 2px);
+  opacity:.55}
+.bg-final i{width:500px;height:500px;left:50%;top:45%;transform:translate(-50%,-50%);border:1px dashed rgba(246,210,122,.16);border-radius:50%;animation:spinSlow 30s linear infinite}
+.bg-final b{width:100%;height:1px;left:0;top:50%;background:linear-gradient(90deg,transparent,rgba(246,210,122,.25),transparent)}
+.bg-final span{width:1px;height:100%;left:50%;top:0;background:linear-gradient(transparent,rgba(246,210,122,.2),transparent)}
+
+@keyframes beam{0%,100%{transform:translateX(-100%)}50%{transform:translateX(100%)}}
+@keyframes spinSlow{to{transform:translate(-50%,-50%) rotate(360deg)}}
+@keyframes pulseRing{0%,100%{transform:translate(-50%,-50%) scale(.94);opacity:.5}50%{transform:translate(-50%,-50%) scale(1.05);opacity:1}}
+@keyframes finalOrbit{to{transform:translate(-50%,-50%) rotate(360deg)}}
+@keyframes float{0%,100%{transform:translateY(0) rotate(45deg)}50%{transform:translateY(-22px) rotate(50deg)}}
+
+@media(max-width:600px){
+  .bg-reveal:before{width:85vw}
+  .bg-gallery-a span{inset:4%}
+  .bg-gallery-b:after{width:95vw;height:95vw}
+  .bg-message:after{inset:4%}
+  .bg-final i{width:82vw;height:82vw}
+}
+
 .scene{
   position:absolute;
   inset:0;
@@ -580,6 +713,7 @@ h2{
 
   <!-- 1. Intro -->
   <section class="scene scene-intro active" data-scene="0">
+<div class="scene-bg bg-intro"><i></i><b></b><span></span></div>
     <div class="scene-inner">
       <div class="gift-wrap" aria-hidden="true">
         <div class="orbit one"><i class="orbit-dot" style="left:12%;top:24%"></i></div>
@@ -603,6 +737,7 @@ h2{
 
   <!-- 2. Birthday reveal -->
   <section class="scene scene-reveal" data-scene="1">
+<div class="scene-bg bg-reveal"><i></i><b></b><span></span></div>
     <div class="scene-inner">
       <p class="eyebrow">Today is your day</p>
       <h2>Happy Birthday<br>Arham ✨</h2>
@@ -612,6 +747,7 @@ h2{
 
   <!-- 3. Gallery one -->
   <section class="scene scene-gallery scene-gallery-a" data-scene="2">
+<div class="scene-bg bg-gallery-a"><i></i><b></b><span></span></div>
     <div class="scene-inner">
       <p class="eyebrow">Moments</p>
       <h2>Good Times</h2>
@@ -627,6 +763,7 @@ h2{
 
   <!-- 4. Gallery two -->
   <section class="scene scene-gallery scene-gallery-b" data-scene="3">
+<div class="scene-bg bg-gallery-b"><i></i><b></b><span></span></div>
     <div class="scene-inner">
       <p class="eyebrow">More memories</p>
       <h2>Keep Smiling</h2>
@@ -642,6 +779,7 @@ h2{
 
   <!-- 5. Message -->
   <section class="scene scene-message" data-scene="4">
+<div class="scene-bg bg-message"><i></i><b></b><span></span></div>
     <div class="scene-inner">
       <p class="eyebrow">For you</p>
       <h2>Keep Shining</h2>
@@ -657,6 +795,7 @@ h2{
 
   <!-- 6. Final -->
   <section class="scene scene-final" data-scene="5">
+<div class="scene-bg bg-final"><i></i><b></b><span></span></div>
     <div class="scene-inner">
       <div class="final-mark" aria-hidden="true"><span>✦</span></div>
       <p class="eyebrow">One more time</p>
