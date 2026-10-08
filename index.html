@@ -743,32 +743,44 @@ h2{
   .bg-reveal:before{width:90vw;height:78vh}
   .bg-reveal:after{width:72vw;height:72vw}
 
-  /* Critical mobile gallery fix: 3 + 2 layout, not 2 + 2 + oversized fifth card. */
-  .scene-gallery .scene-inner{width:100%}
+  /* Mobile gallery: BIG portrait cards in a clean 2-column luxury grid. */
+  .scene-gallery .scene-inner{width:100%;max-width:430px}
   .scene-gallery .gallery,
   .scene-gallery-b .gallery{
-    width:min(94vw,390px);
-    max-width:390px;
+    width:min(94vw,420px);
+    max-width:420px;
+    max-height:calc(100dvh - 205px);
     margin:18px auto 0;
+    padding:3px 4px 14px;
     display:grid;
-    grid-template-columns:repeat(3,minmax(0,1fr));
-    grid-template-rows:auto auto;
-    gap:8px;
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    grid-auto-rows:auto;
+    gap:12px;
+    overflow-y:auto;
+    overflow-x:hidden;
+    scrollbar-width:none;
     transform:none;
+    align-items:start;
   }
+  .scene-gallery .gallery::-webkit-scrollbar,
+  .scene-gallery-b .gallery::-webkit-scrollbar{display:none}
   .scene-gallery .gallery:before{font-size:34px;letter-spacing:5px}
   .scene-gallery .photo,
+  .scene-gallery .photo:nth-child(n),
   .scene-gallery-b .photo:nth-child(n){
-    width:auto;
+    width:100%;
     aspect-ratio:4/5;
     min-width:0;
+    min-height:0;
     transform:none;
-    border-radius:10px;
-    box-shadow:0 14px 30px rgba(0,0,0,.42),inset 0 1px 0 rgba(255,255,255,.1);
+    border-radius:14px;
+    box-shadow:0 18px 38px rgba(0,0,0,.48),inset 0 1px 0 rgba(255,255,255,.12);
   }
-  .scene-gallery .photo:nth-child(4){grid-column:1}
-  .scene-gallery .photo:nth-child(5){grid-column:2}
-  .scene-gallery .photo img{object-position:center}
+  .scene-gallery .photo img{width:100%;height:100%;object-fit:cover;object-position:center}
+  .scene-gallery .photo:nth-child(4),
+  .scene-gallery .photo:nth-child(5){grid-column:auto}
+  .scene-gallery{align-items:flex-start;padding-top:calc(64px + env(safe-area-inset-top))}
+  .scene-gallery .scene-inner{padding-bottom:8px}
 
   /* Message stays compact enough for short phones. */
   .scene-message .scene-inner:before{width:90vw;height:90vw}
@@ -815,11 +827,17 @@ h2{
 }
 
 @media(max-width:360px){
-  .scene{padding-left:10px;padding-right:10px}
+  .scene{padding-left:9px;padding-right:9px}
   h1{font-size:50px}
   h2{font-size:39px}
-  .gallery,.scene-gallery .gallery,.scene-gallery-b .gallery{width:94vw;gap:6px}
-  .photo,.scene-gallery .photo,.scene-gallery-b .photo:nth-child(n){border-radius:8px}
+  .scene-gallery .gallery,.scene-gallery-b .gallery{
+    width:96vw;
+    max-height:calc(100dvh - 190px);
+    gap:9px;
+    padding-left:2px;
+    padding-right:2px;
+  }
+  .scene-gallery .photo,.scene-gallery-b .photo:nth-child(n){border-radius:11px}
   .message-card{padding:22px 16px}
   .message-card p{font-size:18px}
 }
