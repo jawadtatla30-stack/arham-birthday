@@ -15,9 +15,10 @@
 }
 
 *{box-sizing:border-box}
-html,body{width:100%;height:100%;margin:0}
+html,body{width:100%;height:100%;min-height:100%;margin:0}
 body{
   overflow:hidden;
+  overscroll-behavior:none;
   background:
     radial-gradient(circle at 50% 45%,rgba(111,77,20,.16),transparent 34%),
     radial-gradient(circle at 20% 20%,rgba(72,86,150,.12),transparent 30%),
@@ -80,8 +81,10 @@ body{
   position:relative;
   z-index:10;
   width:100%;
-  height:100%;
+  height:100dvh;
+  min-height:100svh;
   perspective:1600px;
+  overflow:hidden;
 }
 
 
@@ -224,7 +227,8 @@ body{
   display:flex;
   align-items:center;
   justify-content:center;
-  padding:80px 24px 110px;
+  padding:clamp(72px,9vh,100px) 24px calc(96px + env(safe-area-inset-bottom));
+  min-height:100%;
   opacity:0;
   visibility:hidden;
   pointer-events:none;
@@ -491,7 +495,7 @@ h2{
   display:grid;
   grid-template-columns:repeat(5,1fr);
   gap:14px;
-  margin:35px auto 0;
+  margin:clamp(24px,4vh,35px) auto 0;
   max-width:1000px;
 }
 .photo{
@@ -654,43 +658,181 @@ h2{
   letter-spacing:3px;
 }
 
-@media(max-width:800px){
-  .gallery{
-    grid-template-columns:repeat(5,1fr);
-    gap:7px;
-    max-width:95vw;
-  }
-  .photo{border-radius:10px}
-  .scene{padding-left:15px;padding-right:15px}
-}
-@media(max-width:600px){
-  h1{letter-spacing:-2px}
-  .gallery{
-    grid-template-columns:repeat(2,1fr);
-    max-width:360px;
-    gap:10px;
-  }
-  .photo:nth-child(n){transform:none}
-  .photo:nth-child(5){grid-column:1 / -1;width:50%;justify-self:center}
-  .message-card{padding:35px 22px}
-  #nextButtonWrap{bottom:18px}
-  #nextButton{min-width:136px;padding:12px 20px 12px 22px}
-  .scene{
-    transform:perspective(1000px) rotateY(-12deg) rotateX(4deg) translate3d(55px,0,-90px) scale(.96);
-  }
-  .scene.exit{
-    transform:perspective(1000px) rotateY(12deg) rotateX(-4deg) translate3d(-55px,0,-100px) scale(.96);
-  }
+@media(max-width:900px){
+  .scene{padding-left:18px;padding-right:18px}
+  .gallery{max-width:92vw;gap:10px}
+  .photo{border-radius:12px}
 }
 
 @media(max-width:600px){
-  .scene-reveal .scene-inner:before{width:88vw;height:88vw}
-  .scene-reveal .scene-inner:after{width:65vw;height:65vw}
-  .scene-gallery .gallery{transform:rotateX(3deg)}
-  .scene-gallery-b .gallery{transform:rotateX(3deg) scale(.97)}
-  .scene-gallery-b .photo:nth-child(n){transform:none}
-  .scene-gallery .gallery:before{font-size:60px;letter-spacing:8px}
-  .scene-message .scene-inner:before{width:95vw;height:95vw}
+  html,body{width:100%;height:100%;overflow:hidden}
+  body{min-height:100svh}
+  #app{height:100dvh;min-height:100svh}
+
+  #progress{
+    top:calc(12px + env(safe-area-inset-top));
+    font-size:9px;
+    letter-spacing:2.5px;
+  }
+
+  .scene{
+    padding:
+      calc(58px + env(safe-area-inset-top))
+      14px
+      calc(82px + env(safe-area-inset-bottom));
+    align-items:center;
+    overflow:hidden;
+    transform:perspective(900px) rotateY(-8deg) rotateX(3deg) translate3d(34px,0,-65px) scale(.985);
+  }
+  .scene.exit{
+    transform:perspective(900px) rotateY(8deg) rotateX(-3deg) translate3d(-34px,0,-70px) scale(.985);
+  }
+  .scene-inner{
+    width:100%;
+    max-width:430px;
+  }
+  .scene.active .scene-inner{
+    animation:contentRiseMobile 1s cubic-bezier(.16,1,.3,1) both;
+  }
+  @keyframes contentRiseMobile{
+    0%{opacity:0;transform:translate3d(0,28px,-60px) rotateX(7deg) scale(.97)}
+    55%{opacity:1}
+    100%{opacity:1;transform:translate3d(0,0,0) rotateX(0) scale(1)}
+  }
+
+  .eyebrow{
+    margin-bottom:10px;
+    font-size:8px;
+    letter-spacing:3px;
+  }
+  h1{
+    font-size:clamp(50px,17vw,76px);
+    line-height:.86;
+    letter-spacing:-3px;
+  }
+  h2{
+    font-size:clamp(40px,12.5vw,58px);
+    line-height:.92;
+    letter-spacing:-1.5px;
+  }
+  .subtitle{
+    margin:16px auto 0;
+    max-width:330px;
+    font-size:11px;
+    line-height:1.65;
+  }
+
+  /* Intro: scale the 3D gift instead of letting it push content off-screen. */
+  .gift-wrap{
+    width:190px;
+    height:170px;
+    margin:0 auto 20px;
+    transform:scale(.9);
+  }
+  .gift{
+    transform:translate(-50%,-50%) scale(.78);
+  }
+  .orbit.one{width:205px;height:72px}
+  .orbit.two{width:230px;height:88px}
+  .orbit.three{width:175px;height:175px}
+  .scene-intro .scene-inner:before{top:105px;width:230px;height:55px}
+
+  /* Birthday reveal: keep the rings inside the phone viewport. */
+  .scene-reveal .scene-inner:before{width:74vw;height:74vw}
+  .scene-reveal .scene-inner:after{width:50vw;height:50vw}
+  .bg-reveal:before{width:90vw;height:78vh}
+  .bg-reveal:after{width:72vw;height:72vw}
+
+  /* Critical mobile gallery fix: 3 + 2 layout, not 2 + 2 + oversized fifth card. */
+  .scene-gallery .scene-inner{width:100%}
+  .scene-gallery .gallery,
+  .scene-gallery-b .gallery{
+    width:min(94vw,390px);
+    max-width:390px;
+    margin:18px auto 0;
+    display:grid;
+    grid-template-columns:repeat(3,minmax(0,1fr));
+    grid-template-rows:auto auto;
+    gap:8px;
+    transform:none;
+  }
+  .scene-gallery .gallery:before{font-size:34px;letter-spacing:5px}
+  .scene-gallery .photo,
+  .scene-gallery-b .photo:nth-child(n){
+    width:auto;
+    aspect-ratio:4/5;
+    min-width:0;
+    transform:none;
+    border-radius:10px;
+    box-shadow:0 14px 30px rgba(0,0,0,.42),inset 0 1px 0 rgba(255,255,255,.1);
+  }
+  .scene-gallery .photo:nth-child(4){grid-column:1}
+  .scene-gallery .photo:nth-child(5){grid-column:2}
+  .scene-gallery .photo img{object-position:center}
+
+  /* Message stays compact enough for short phones. */
+  .scene-message .scene-inner:before{width:90vw;height:90vw}
+  .message-card{
+    width:min(92vw,390px);
+    margin:20px auto 0;
+    padding:26px 20px;
+    border-radius:20px;
+  }
+  .message-card p{
+    font-size:clamp(18px,5.5vw,24px);
+    line-height:1.42;
+  }
+
+  /* Final page: smaller halo and mark on phones. */
+  .final-mark{
+    width:82px;
+    height:82px;
+    margin-bottom:20px;
+  }
+  .final-mark span{font-size:30px}
+  .scene-final .final-mark:after{inset:-28px}
+  .bg-final:before{width:76vw;height:76vw}
+  .bg-final i{width:70vw;height:70vw}
+
+  #nextButtonWrap{
+    left:50%;
+    bottom:calc(12px + env(safe-area-inset-bottom));
+  }
+  #nextButton{
+    min-width:128px;
+    min-height:44px;
+    padding:11px 18px;
+    font-size:10px;
+    letter-spacing:1.7px;
+  }
+  #nextButton span{font-size:15px;margin-left:6px}
+
+  /* Decorative worlds stay inside the viewport on small screens. */
+  .bg-intro:after{width:92vw;height:92vw}
+  .bg-gallery-a:after{width:88vw;height:88vw}
+  .bg-gallery-b:after{width:84vw;height:84vw}
+  .bg-message:before{width:86vw;height:86vw}
+}
+
+@media(max-width:360px){
+  .scene{padding-left:10px;padding-right:10px}
+  h1{font-size:50px}
+  h2{font-size:39px}
+  .gallery,.scene-gallery .gallery,.scene-gallery-b .gallery{width:94vw;gap:6px}
+  .photo,.scene-gallery .photo,.scene-gallery-b .photo:nth-child(n){border-radius:8px}
+  .message-card{padding:22px 16px}
+  .message-card p{font-size:18px}
+}
+
+@media(max-height:680px) and (max-width:600px){
+  .scene{padding-top:52px;padding-bottom:72px}
+  .gift-wrap{transform:scale(.78);margin-bottom:8px}
+  .scene-gallery .gallery,.scene-gallery-b .gallery{margin-top:12px}
+  .message-card{margin-top:14px;padding:20px 17px}
+  .message-card p{font-size:17px}
+  .final-mark{width:70px;height:70px;margin-bottom:14px}
+  .final-mark span{font-size:26px}
+  .subtitle{margin-top:10px}
 }
 
 @media(prefers-reduced-motion:reduce){
