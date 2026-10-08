@@ -1,6 +1,4 @@
-from pathlib import Path
-
-html = r'''<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -359,81 +357,6 @@ body{
   text-transform:uppercase;
 }
 
-/* ---------- video ---------- */
-.video-stage{
-  width:min(1000px,94vw);
-  height:min(70vh,680px);
-  position:relative;
-  display:grid;
-  place-items:center;
-  perspective:1200px;
-}
-
-.video-frame{
-  width:100%;
-  height:100%;
-  position:relative;
-  border-radius:28px;
-  overflow:hidden;
-  background:#090c17;
-  border:1px solid rgba(255,255,255,.16);
-  box-shadow:
-    0 40px 100px rgba(0,0,0,.65),
-    0 0 70px rgba(246,210,122,.07);
-  transform:rotateX(2deg) rotateY(0deg) translateZ(0);
-  transition:transform 1s ease;
-}
-
-.video-frame:hover{
-  transform:rotateX(0) rotateY(0) translateZ(20px);
-}
-
-.video-backdrop{
-  position:absolute;
-  inset:0;
-  background-position:center;
-  background-size:cover;
-  filter:blur(30px) brightness(.32);
-  transform:scale(1.12);
-}
-
-#friendsVideo{
-  position:absolute;
-  inset:0;
-  width:100%;
-  height:100%;
-  object-fit:contain;
-  background:transparent;
-  opacity:0;
-  transition:opacity 1s ease;
-  z-index:2;
-}
-
-#friendsVideo.ready{
-  opacity:1;
-}
-
-.video-shade{
-  position:absolute;
-  inset:0;
-  z-index:3;
-  pointer-events:none;
-  background:
-    linear-gradient(180deg,rgba(0,0,0,.15),transparent 25%,transparent 75%,rgba(0,0,0,.25));
-}
-
-.video-loading{
-  position:absolute;
-  z-index:4;
-  color:#fff;
-  font-size:12px;
-  letter-spacing:3px;
-  text-transform:uppercase;
-  opacity:.7;
-  transition:opacity .5s;
-}
-
-.video-loading.hide{opacity:0}
 
 /* ---------- final ---------- */
 .final-glow{
@@ -503,6 +426,108 @@ body{
   0%{opacity:0}
   35%{opacity:.18}
   100%{opacity:0}
+}
+
+
+/* ---------- cinematic 3D scene transitions ---------- */
+.scene{
+  transform:perspective(1400px) rotateY(-18deg) rotateX(5deg) translate3d(90px,0,-120px) scale(.94);
+  transform-origin:center center;
+  backface-visibility:hidden;
+  will-change:transform,opacity;
+  transition:
+    opacity .8s cubic-bezier(.22,1,.36,1),
+    transform 1.05s cubic-bezier(.16,1,.3,1),
+    visibility 0s linear 1.05s;
+}
+
+.scene.active{
+  transform:perspective(1400px) rotateY(0deg) rotateX(0deg) translate3d(0,0,0) scale(1);
+  transition-delay:0s;
+}
+
+.scene.exit{
+  transform:perspective(1400px) rotateY(18deg) rotateX(-5deg) translate3d(-90px,0,-160px) scale(.94);
+  opacity:0;
+}
+
+.scene.active .scene-inner{
+  animation:sceneContentIn 1.05s cubic-bezier(.16,1,.3,1) both;
+}
+
+@keyframes sceneContentIn{
+  0%{
+    opacity:0;
+    transform:translate3d(0,35px,-90px) rotateX(8deg) scale(.96);
+  }
+  100%{
+    opacity:1;
+    transform:translate3d(0,0,0) rotateX(0) scale(1);
+  }
+}
+
+/* ---------- manual next button ---------- */
+#nextButtonWrap{
+  position:fixed;
+  left:50%;
+  bottom:28px;
+  transform:translateX(-50%);
+  z-index:60;
+  pointer-events:auto;
+}
+
+#nextButton{
+  appearance:none;
+  border:1px solid rgba(246,210,122,.55);
+  border-radius:999px;
+  padding:13px 23px 13px 25px;
+  min-width:142px;
+  background:rgba(5,7,19,.72);
+  color:#fff1b8;
+  font:600 12px/1 Inter,Arial,sans-serif;
+  letter-spacing:2px;
+  text-transform:uppercase;
+  cursor:pointer;
+  backdrop-filter:blur(14px);
+  -webkit-backdrop-filter:blur(14px);
+  box-shadow:0 12px 35px rgba(0,0,0,.38),0 0 24px rgba(246,210,122,.08),inset 0 1px 0 rgba(255,255,255,.12);
+  transition:transform .35s cubic-bezier(.16,1,.3,1),background .35s ease,box-shadow .35s ease,border-color .35s ease;
+}
+
+#nextButton span{
+  display:inline-block;
+  margin-left:8px;
+  font-size:17px;
+  line-height:0;
+  vertical-align:-2px;
+  transition:transform .35s ease;
+}
+
+#nextButton:hover{
+  transform:translateY(-4px) scale(1.03);
+  border-color:rgba(246,210,122,.9);
+  background:rgba(20,23,43,.88);
+  box-shadow:0 18px 42px rgba(0,0,0,.48),0 0 30px rgba(246,210,122,.14);
+}
+
+#nextButton:hover span{transform:translateX(5px)}
+
+#nextButton:active{transform:translateY(-1px) scale(.98)}
+
+#nextButton:focus-visible{
+  outline:2px solid #fff1b8;
+  outline-offset:4px;
+}
+
+@media(max-width:700px){
+  #nextButtonWrap{bottom:18px}
+  #nextButton{min-width:136px;padding:12px 20px 12px 22px}
+  .scene{
+    transform:perspective(1000px) rotateY(-12deg) rotateX(4deg) translate3d(55px,0,-90px) scale(.96);
+  }
+  .scene.exit{
+    transform:perspective(1000px) rotateY(12deg) rotateX(-4deg) translate3d(-55px,0,-100px) scale(.96);
+  }
 }
 
 /* ---------- responsive ---------- */
@@ -639,36 +664,8 @@ body{
       </div>
     </div>
   </section>
-
-  <!-- SCENE 5 VIDEO -->
+<!-- SCENE 5 -->
   <section class="scene" id="scene5">
-    <div class="scene-inner">
-      <div class="kicker">The people behind the memories</div>
-
-      <div class="video-stage">
-        <div class="video-frame">
-          <div class="video-backdrop" id="videoBackdrop"></div>
-
-          <video
-            id="friendsVideo"
-            playsinline
-            muted
-            autoplay
-            preload="auto"
-            poster="assets/arham-01.jpeg"
-          >
-            <source src="assets/friends-video.mp4" type="video/mp4">
-          </video>
-
-          <div class="video-shade"></div>
-          <div class="video-loading" id="videoLoading">LOADING MEMORY...</div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- SCENE 6 -->
-  <section class="scene" id="scene6">
     <div class="scene-inner">
       <div class="kicker">One more thing</div>
       <div class="heart">💛</div>
@@ -680,8 +677,8 @@ body{
     </div>
   </section>
 
-  <!-- SCENE 7 -->
-  <section class="scene" id="scene7">
+  <!-- SCENE 6 -->
+  <section class="scene" id="scene6">
     <div class="scene-inner">
       <div class="final-glow"></div>
       <div class="kicker">For you, Arham</div>
@@ -755,8 +752,8 @@ body{
     void flash.offsetWidth;
     flash.classList.add("flash-now");
 
-    if(index===1 || index===5 || index===6){
-      burst(index===6?85:28);
+    if(index===1 || index===4 || index===5){
+      burst(index===5?85:28);
     }
 
     if(index===2){
@@ -783,140 +780,46 @@ body{
     },900);
   }
 
-  /* ---------- video: never leave a blank frame ---------- */
-  const video=document.getElementById("friendsVideo");
-  const loading=document.getElementById("videoLoading");
-  const backdrop=document.getElementById("videoBackdrop");
 
-  backdrop.style.backgroundImage='url("assets/arham-01.jpeg")';
 
-  let videoFallbackTimer=null;
-  let videoStarted=false;
+  /* ---------- manual navigation ---------- */
+  const nextButton = document.createElement("button");
+  nextButton.id = "nextButton";
+  nextButton.type = "button";
+  nextButton.innerHTML = 'Continue <span>→</span>';
 
-  function startVideo(){
-    videoStarted=false;
-    loading.classList.remove("hide");
-    video.classList.remove("ready");
+  const buttonWrap = document.createElement("div");
+  buttonWrap.id = "nextButtonWrap";
+  buttonWrap.appendChild(nextButton);
+  document.getElementById("experience").appendChild(buttonWrap);
 
-    try{
-      video.currentTime=0;
-    }catch(e){}
-
-    clearTimeout(videoFallbackTimer);
-
-    const tryPlay=()=>{
-      video.muted=true;
-      const promise=video.play();
-
-      if(promise && promise.catch){
-        promise.catch(()=>{
-          /* Muted autoplay may still be blocked by a browser.
-             The photo backdrop remains visible instead of a black screen. */
-          loading.classList.add("hide");
-        });
-      }
-    };
-
-    if(video.readyState>=2){
-      tryPlay();
+  function updateNextButton(){
+    if(current >= scenes.length - 1){
+      nextButton.innerHTML = 'Replay <span>↻</span>';
+      nextButton.setAttribute("aria-label","Replay birthday experience");
     }else{
-      video.load();
+      nextButton.innerHTML = 'Continue <span>→</span>';
+      nextButton.setAttribute("aria-label","Continue to next scene");
     }
-
-    videoFallbackTimer=setTimeout(()=>{
-      if(!videoStarted){
-        loading.classList.add("hide");
-      }
-    },6500);
-  }
-
-  video.addEventListener("canplay",()=>{
-    if(current===4){
-      video.play().catch(()=>{});
-    }
-  });
-
-  video.addEventListener("playing",()=>{
-    videoStarted=true;
-    video.classList.add("ready");
-    loading.classList.add("hide");
-    clearTimeout(videoFallbackTimer);
-  });
-
-  video.addEventListener("error",()=>{
-    video.classList.remove("ready");
-    loading.classList.add("hide");
-  });
-
-  video.addEventListener("ended",()=>{
-    if(current===4){
-      setTimeout(()=>goNext(),900);
-    }
-  });
-
-  /* ---------- automatic timing ---------- */
-  const durations=[
-    5000,   // intro
-    5000,   // birthday reveal
-    11000,  // photo gallery 1
-    11000,  // photo gallery 2
-    12000,  // video minimum; video can extend this
-    7500,   // message
-    7000    // final
-  ];
-
-  function scheduleNext(){
-    clearTimeout(timer);
-
-    /* Video controls its own transition when it ends. */
-    if(current===4){
-      timer=setTimeout(()=>{
-        if(current===4) goNext();
-      },16000);
-      return;
-    }
-
-    timer=setTimeout(goNext,durations[current]);
   }
 
   function goNext(){
-    clearTimeout(timer);
-
-    if(current<scenes.length-1){
-      showScene(current+1);
-      scheduleNext();
+    if(current < scenes.length - 1){
+      showScene(current + 1);
     }else{
-      /* cinematic replay */
-      setTimeout(()=>{
-        showScene(0);
-        scheduleNext();
-      },2500);
+      showScene(0);
     }
+    updateNextButton();
   }
 
-  /* ---------- start automatically ---------- */
-  function start(){
-    if(started) return;
-    started=true;
-
-    burst(25);
-    showScene(0);
-    scheduleNext();
-  }
+  nextButton.addEventListener("click", goNext);
 
   window.addEventListener("load",()=>{
-    setTimeout(start,450);
+    updateNextButton();
+    showScene(0);
   });
 
-})();
 </script>
 
 </body>
 </html>
-'''
-
-path = Path("/mnt/data/index.html")
-path.write_text(html, encoding="utf-8")
-print(f"Created: {path}")
-print("Use this file to replace the complete contents of GitHub index.html.")
-print("Asset paths expected: assets/arham-01.jpeg ... assets/arham-08.jpeg and assets/friends-video.mp4")
